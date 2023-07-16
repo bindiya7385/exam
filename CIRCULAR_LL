@@ -1,0 +1,247 @@
+// Implementation of Circular Linked List
+
+#include "iostream.h"
+#include "conio.h"
+class NODE
+{
+	public:
+		int data;
+		NODE *next;
+};
+class LIST
+{
+		//  data
+		NODE *start,*end;
+	public:
+		// operations
+		LIST();
+		void ADD_FIRST(int); 	// 1
+		void ADD_LAST(int); 	// 2
+		int DEL_FIRST(); 		// 3
+		int DEL_LAST(); 		// 4
+		void VIEW_FWD(); 		// 5
+		int IS_EMPTY();
+};
+/////////////////////////////////////////////////////////////////
+LIST::LIST()
+{
+	// def of function
+	start = NULL;
+	end = NULL;
+}
+/////////////////////////////////////////////////////////////////
+void LIST::ADD_FIRST(int ele)
+{
+	// def of function
+	//case - I Check List is full?
+	//----- (A) create new node --------------
+	NODE *NN;
+	NN= new NODE(); // allocate new node
+	/*if(NN == NULL)
+	{
+		cout<<endl<<"List is full";
+		return;
+	}*/
+	//----- (B) fill up new node -------------
+	NN->data = ele;
+	NN->next = NULL;
+	//---- (C) set the links -----------------
+	if(start==NULL) //case - II Not Full - Empty
+	{
+		start = NN;
+		end = NN;
+		end->next = NN; //IMP
+	}
+	else //case - III Not Full - Not Empty
+	{
+		NN->next = start;//sets null in case of list initially empty
+		start = NN;
+		end->next = NN; //start
+	}
+}
+/////////////////////////////////////////////////////////////////
+void LIST::ADD_LAST(int ele)
+{
+	// def of function
+	//case - I  List is full
+	//----- (A) create new node --------------
+	NODE *NN;
+	NN= new NODE(); // allocate new node
+	/*if(NN == NULL) // optional
+	{
+		cout<<endl<<"List is full";
+		return;
+	}*/
+	//----- (B) fill up new node -------------
+	NN->data = ele;
+	NN->next = NULL;
+	//---- (C) set the links -----------------
+	if(start==NULL) //case - II Not Full - Empty
+	{
+		NN->next = NN;//IMP
+		start = NN;
+		end = NN;
+	}
+	else
+	{
+		end->next = NN;
+		NN->next = start;
+		end = NN;
+	}
+}
+/////////////////////////////////////////////////////////////////
+int LIST::DEL_FIRST()
+{
+	// def of function
+	if(start == NULL)
+	{
+		cout<<endl<<"List is empty";
+		return NULL;
+	}
+	else
+	{
+		int ele = start->data;
+		NODE * TEMP = start;
+		if(start->next == start) // only one node in list
+		{
+			start = NULL;
+			end = NULL;
+		}
+		else
+		{
+			start = start->next;
+			end->next = start;
+		}
+		delete TEMP;
+		return ele;
+	}
+}
+/////////////////////////////////////////////////////////////////
+int LIST::DEL_LAST()
+{
+	// def of function
+	if(start == NULL)
+	{
+		cout<<endl<<"List is empty";
+		return NULL;
+	}
+	else
+	{
+		int ele = end->data;
+		NODE * TEMP = end;
+		if(start->next == start) // only one node in list
+		{
+			start = NULL;
+			end = NULL;
+		}
+		else
+		{
+			NODE *prev = start;
+			while(prev->next != end)
+			{
+				prev = prev->next;
+			}
+			prev->next=start;
+			end=prev;
+		}
+		delete TEMP;
+		return ele;
+	}
+}
+/////////////////////////////////////////////////////////////////
+int LIST::IS_EMPTY()
+{
+	// def of function
+	if(start == NULL)
+		return 1;
+	else
+		return 0;
+}
+/////////////////////////////////////////////////////////////////
+void LIST::VIEW_FWD()
+{
+	// def of function
+	if(start == NULL)
+	{
+		cout<<endl<<"List is empty";
+		return;
+	}
+	cout<<endl<<"List elements are : ";
+	cout<<start->data<<" ";
+	NODE *ptr = start->next;
+	while(ptr != start )
+	{
+		cout<<ptr-> data<<" ";
+		ptr=ptr->next;
+	}
+}
+/////////////////////////////////////////////////////////////////
+void MENU()
+{
+	int ele, opt, pos;
+	LIST obj;
+
+	do
+	{
+		cout<<endl<<"================\n";
+		cout<<endl<<"1 Add at First";
+		cout<<endl<<"2 Add at Last";
+		cout<<endl<<"3 Delete from First";
+		cout<<endl<<"4 Delete from Last";
+		cout<<endl<<"5 List All (FWD)" ;
+		cout<<endl<<"6 Exit";
+		cout<<endl<<"================\n";
+		cout<<endl<<"Enter your choice : ";
+		cin>>opt;
+		switch(opt)
+		{
+			case 1:
+				cout<<endl<<"Enter element : ";
+				cin>>ele;
+				obj.ADD_FIRST(ele);
+				obj.VIEW_FWD();
+				break;
+			case 2:
+				cout<<endl<<"Enter element : ";
+				cin>>ele;
+				obj.ADD_LAST(ele);
+				obj.VIEW_FWD();
+				break;
+			case 3:
+				if(!obj.IS_EMPTY())
+				{
+					ele = obj.DEL_FIRST();
+					cout<<endl<<"Delted element = "<<ele;
+					obj.VIEW_FWD();
+				}
+				else
+					cout<<endl<<"List is empty";
+				break;
+			case 4:
+				if(!obj.IS_EMPTY())
+				{
+					ele = obj.DEL_LAST();
+					cout<<endl<<"Delted element = "<<ele;
+					obj.VIEW_FWD();
+				}
+				else
+					cout<<endl<<"List is empty";
+				break;
+			case 5:
+				obj.VIEW_FWD();
+				break;
+			case 6:
+				return;
+			default:
+				cout<<endl<<"invalid input";
+		}
+	}while(1);
+}
+/////////////////////////////////////////////////////////////////
+void main()
+{
+	clrscr();
+	MENU();
+	getch();
+}
+/////////////////////////////////////////////////////////////////
